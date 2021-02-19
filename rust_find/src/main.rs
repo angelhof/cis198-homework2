@@ -22,14 +22,19 @@ struct CLI {
 
 #[derive(Debug)]
 struct FindFile {
-    path: String,
+    name: String,
+    dir_in: String,
     size_bytes: u64,
 }
 impl FindFile {
     fn from(path: &Path) -> Option<FindFile> {
-        let path = path.to_str()?;
+        // I am not sure if I should silence the second Option (since it might not be valid Unicode this should be warned somehow).
+        let mut components = path.components();
+        let name = components.next_back()?.as_os_str().to_str()?;
+        let dir_in = components.as_path().to_str()?;
         Some(FindFile {
-            path: path.to_owned(),
+            name: name.to_owned(),
+            dir_in: dir_in.to_owned(),
             size_bytes: 0,
         })
     }
