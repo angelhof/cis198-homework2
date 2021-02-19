@@ -1,10 +1,13 @@
-use structopt::StructOpt;
-use std::path::Path;
-use std::fs::{DirEntry, ReadDir};
+use std::fs::DirEntry;
 use std::io::Result;
+use std::path::Path;
+use structopt::StructOpt;
 
 #[derive(Debug, StructOpt)]
-#[structopt(name = "rust-find", about = "A command line utility for searching for files with regexes.")]
+#[structopt(
+    name = "rust-find",
+    about = "A command line utility for searching for files with regexes."
+)]
 struct CLI {
     #[structopt(short, long)]
     dirs: Vec<String>,
@@ -25,9 +28,9 @@ struct FindFile {
 impl FindFile {
     fn from(path: &Path) -> Option<FindFile> {
         let path = path.to_str()?;
-        Some(FindFile{
-            path : path.to_owned(),
-            size_bytes : 0,
+        Some(FindFile {
+            path: path.to_owned(),
+            size_bytes: 0,
         })
     }
 }
@@ -62,7 +65,7 @@ fn handle_dir_entry_if_exists(entry: Result<DirEntry>) -> Vec<FindFile> {
     }
 }
 
-// Walks a directory, 
+// Walks a directory,
 fn get_dir_files_if_exists(path: &Path) -> Vec<FindFile> {
     match path.read_dir() {
         Ok(read_dir) => read_dir.flat_map(handle_dir_entry_if_exists).collect(),
